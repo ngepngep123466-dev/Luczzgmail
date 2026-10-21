@@ -18,24 +18,20 @@
 <body class="bg-slate-100 text-slate-800 flex justify-center items-center min-h-screen" 
       x-data="appData()" x-init="init()">
 
-    <!-- CONTAINER UTAMA (TAMPILAN MOBILE-FRIENDLY) -->
     <div class="w-full max-w-md bg-white min-h-screen shadow-2xl flex flex-col relative overflow-hidden pb-20">
 
-        <!-- ==================== HALAMAN AUTH (LOGIN & REGISTER) ==================== -->
+        <!-- AUTH -->
         <template x-if="!isLoggedIn">
             <div class="flex-1 flex flex-col justify-center px-6 py-10 bg-gradient-to-br from-blue-600 to-indigo-800 text-white">
                 <div class="text-center mb-8">
                     <h1 class="text-3xl font-extrabold tracking-tight mb-2">Luczz Gmail 🚀</h1>
                     <p class="text-blue-100 text-sm">Platform Stor & Booking Gmail Terpercaya</p>
                 </div>
-
-                <!-- Tab Switcher -->
                 <div class="flex bg-blue-700/50 p-1 rounded-xl mb-6 backdrop-blur">
                     <button @click="authMode = 'login'" :class="authMode === 'login' ? 'bg-white text-blue-600 font-bold shadow' : 'text-white'" class="flex-1 py-2 text-sm rounded-lg transition">Masuk</button>
                     <button @click="authMode = 'register'" :class="authMode === 'register' ? 'bg-white text-blue-600 font-bold shadow' : 'text-white'" class="flex-1 py-2 text-sm rounded-lg transition">Daftar</button>
                 </div>
-
-                <!-- Form Login -->
+                <!-- Login -->
                 <div x-show="authMode === 'login'" class="bg-white text-slate-800 p-6 rounded-2xl shadow-xl space-y-4">
                     <h2 class="text-xl font-bold text-slate-900">Masuk Akun</h2>
                     <div>
@@ -48,8 +44,7 @@
                     </div>
                     <button @click="login()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-xl font-bold transition shadow-lg shadow-blue-500/30">Masuk Sekarang</button>
                 </div>
-
-                <!-- Form Register -->
+                <!-- Register -->
                 <div x-show="authMode === 'register'" class="bg-white text-slate-800 p-6 rounded-2xl shadow-xl space-y-4">
                     <h2 class="text-xl font-bold text-slate-900">Daftar Akun Baru</h2>
                     <div>
@@ -69,14 +64,11 @@
             </div>
         </template>
 
-        <!-- ==================== HALAMAN UTAMA SETELAH LOGIN ==================== -->
         <template x-if="isLoggedIn">
             <div class="flex-1 flex flex-col bg-slate-50">
-                
-                <!-- TOP HEADER -->
                 <div class="bg-white px-4 py-3 border-b flex justify-between items-center sticky top-0 z-30 shadow-xs">
                     <div class="flex items-center space-x-2">
-                        <div class="w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center font-bold">S3</div>
+                        <div class="w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center font-bold">L</div>
                         <span class="font-extrabold text-blue-600 tracking-wide text-lg" x-text="settings.appName"></span>
                     </div>
                     <a href="https://whatsapp.com/channel/0029Vb8sNmqFXUuVvXyWBW2W" target="_blank" class="text-xs bg-blue-50 text-blue-600 font-semibold px-3 py-1.5 rounded-full border border-blue-100 flex items-center gap-1.5 hover:bg-blue-100 transition">
@@ -84,12 +76,9 @@
                     </a>
                 </div>
 
-                <!-- KONTEN TAB UTAMA -->
                 <div class="flex-1 overflow-y-auto p-4 space-y-4">
-
-                    <!-- TAB 1: BERANDA -->
+                    <!-- BERANDA -->
                     <div x-show="currentTab === 'beranda'" class="space-y-4">
-                        <!-- Kartu Saldo -->
                         <div class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-5 rounded-2xl shadow-lg relative overflow-hidden">
                             <p class="text-xs text-blue-200 font-medium">SALDO ANDA</p>
                             <h2 class="text-3xl font-extrabold mt-1" x-text="'Rp' + formatRupiah(currentUser.saldo)"></h2>
@@ -99,151 +88,172 @@
                                 <button @click="currentTab = 'riwayat'" class="bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-4 py-2 rounded-xl backdrop-blur transition">Riwayat</button>
                             </div>
                         </div>
-
-                        <!-- Menu Grid Utama -->
                         <div class="grid grid-cols-5 gap-2 bg-white p-3 rounded-2xl shadow-xs border border-slate-100 text-center">
-                            <button @click="currentTab = 'stor'" class="flex flex-col items-center p-2 rounded-xl hover:bg-blue-50 transition">
-                                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-1"><i data-lucide="send" class="w-5 h-5"></i></div>
-                                <span class="text-[11px] font-bold">Stor</span>
-                            </button>
-                            <button @click="currentTab = 'riwayat'" class="flex flex-col items-center p-2 rounded-xl hover:bg-emerald-50 transition">
-                                <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mb-1"><i data-lucide="clock" class="w-5 h-5"></i></div>
-                                <span class="text-[11px] font-bold">Riwayat</span>
-                            </button>
-                            <button @click="currentTab = 'checker'" class="flex flex-col items-center p-2 rounded-xl hover:bg-cyan-50 transition">
-                                <div class="w-12 h-12 bg-cyan-100 text-cyan-600 rounded-full flex items-center justify-center mb-1"><i data-lucide="search" class="w-5 h-5"></i></div>
-                                <span class="text-[11px] font-bold">Checker</span>
-                            </button>
-                            <button @click="currentTab = 'saldo'" class="flex flex-col items-center p-2 rounded-xl hover:bg-amber-50 transition">
-                                <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mb-1"><i data-lucide="wallet" class="w-5 h-5"></i></div>
-                                <span class="text-[11px] font-bold">Saldo</span>
-                            </button>
-                            <button @click="currentTab = 'rules'" class="flex flex-col items-center p-2 rounded-xl hover:bg-purple-50 transition">
-                                <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mb-1"><i data-lucide="file-text" class="w-5 h-5"></i></div>
-                                <span class="text-[11px] font-bold">Rules</span>
-                            </button>
-                        </div>
-
-                        <!-- Menu Tambahan -->
-                        <div class="grid grid-cols-5 gap-2 bg-white p-3 rounded-2xl shadow-xs border border-slate-100 text-center">
-                            <div class="flex flex-col items-center p-2"><div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center mb-1"><i data-lucide="headphones" class="w-4 h-4"></i></div><span class="text-[10px]">Support</span></div>
-                            <div class="flex flex-col items-center p-2"><div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center mb-1"><i data-lucide="users" class="w-4 h-4"></i></div><span class="text-[10px]">Komunitas</span></div>
-                            <div class="flex flex-col items-center p-2"><div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center mb-1"><i data-lucide="award" class="w-4 h-4"></i></div><span class="text-[10px]">Rank</span></div>
-                            <div class="flex flex-col items-center p-2"><div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center mb-1"><i data-lucide="gift" class="w-4 h-4"></i></div><span class="text-[10px]">Referral</span></div>
-                            <div class="flex flex-col items-center p-2"><div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center mb-1"><i data-lucide="bar-chart" class="w-4 h-4"></i></div><span class="text-[10px]">Laporan</span></div>
-                        </div>
-
-                        <!-- Syarat & Ketentuan Card -->
-                        <div @click="currentTab = 'rules'" class="bg-white p-4 rounded-2xl shadow-xs border border-slate-100 flex items-center justify-between cursor-pointer hover:bg-slate-50">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center"><i data-lucide="scale" class="w-5 h-5"></i></div>
-                                <div>
-                                    <h4 class="text-sm font-bold">Syarat & Ketentuan</h4>
-                                    <p class="text-xs text-slate-500">Baca ketentuan penggunaan platform</p>
-                                </div>
-                            </div>
-                            <i data-lucide="chevron-right" class="w-5 h-5 text-slate-400"></i>
+                            <button @click="currentTab = 'stor'" class="flex flex-col items-center p-2 rounded-xl hover:bg-blue-50"><div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-1"><i data-lucide="send" class="w-5 h-5"></i></div><span class="text-[11px] font-bold">Stor</span></button>
+                            <button @click="currentTab = 'riwayat'" class="flex flex-col items-center p-2 rounded-xl hover:bg-emerald-50"><div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mb-1"><i data-lucide="clock" class="w-5 h-5"></i></div><span class="text-[11px] font-bold">Riwayat</span></button>
+                            <button @click="currentTab = 'checker'" class="flex flex-col items-center p-2 rounded-xl hover:bg-cyan-50"><div class="w-12 h-12 bg-cyan-100 text-cyan-600 rounded-full flex items-center justify-center mb-1"><i data-lucide="search" class="w-5 h-5"></i></div><span class="text-[11px] font-bold">Checker</span></button>
+                            <button @click="currentTab = 'saldo'" class="flex flex-col items-center p-2 rounded-xl hover:bg-amber-50"><div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mb-1"><i data-lucide="wallet" class="w-5 h-5"></i></div><span class="text-[11px] font-bold">Saldo</span></button>
+                            <button @click="currentTab = 'rules'" class="flex flex-col items-center p-2 rounded-xl hover:bg-purple-50"><div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mb-1"><i data-lucide="file-text" class="w-5 h-5"></i></div><span class="text-[11px] font-bold">Rules</span></button>
                         </div>
                     </div>
 
-                    <!-- TAB 2: STOR GMAIL -->
+                    <!-- STOR -->
                     <div x-show="currentTab === 'stor'" class="space-y-4">
                         <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-100 space-y-4">
                             <h2 class="text-lg font-bold">Stor Gmail</h2>
                             <p class="text-xs text-amber-600 bg-amber-50 p-3 rounded-xl border border-amber-200" x-text="settings.warningText"></p>
-                            
-                            <!-- Pilihan Kategori/Jenis dari Owner -->
                             <div>
-                                <label class="text-xs font-semibold text-slate-600">Pilih Jenis / Kategori</label>
+                                <label class="text-xs font-semibold text-slate-600">Pilih Kategori</label>
                                 <select x-model="storCategory" class="w-full mt-1 p-2.5 border rounded-xl text-sm bg-slate-50">
                                     <option :value="settings.category1" x-text="settings.category1"></option>
                                     <option :value="settings.category2" x-text="settings.category2"></option>
                                 </select>
                             </div>
-
-                            <!-- Input Gmail Tanpa Batas Per Baris -->
                             <div>
                                 <label class="text-xs font-semibold text-slate-600">Masukkan Gmail (1 baris = 1 Gmail)</label>
-                                <textarea x-model="storInputText" rows="6" placeholder="nama1@gmail.com&#10;nama2@gmail.com&#10;nama3@gmail.com" class="w-full mt-1 p-3 border rounded-xl text-sm font-mono focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+                                <textarea x-model="storInputText" rows="6" class="w-full mt-1 p-3 border rounded-xl text-sm font-mono"></textarea>
                             </div>
-
-                            <button @click="submitStor()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-bold transition shadow-md">Kirim / Stor Gmail</button>
-                        </div>
-
-                        <!-- Bagian Booking Gmail -->
-                        <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-100 space-y-3">
-                            <h3 class="font-bold text-md">Booking Stok Gmail</h3>
-                            <p class="text-xs text-slate-500">Ambil stok Gmail yang disediakan owner agar format stor Anda sesuai.</p>
-                            <div class="flex gap-2">
-                                <select x-model.number="bookingQty" class="p-2 border rounded-xl text-xs bg-slate-50 flex-1">
-                                    <option value="1">1 Gmail</option>
-                                    <option value="10">10 Gmail</option>
-                                    <option value="50">50 Gmail</option>
-                                    <option value="100">100 Gmail</option>
-                                </select>
-                                <button @click="bookGmail()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition">Ambil Stok</button>
-                            </div>
-
-                            <!-- Hasil Booking -->
-                            <template x-if="bookedList.length > 0">
-                                <div class="mt-3 space-y-2">
-                                    <p class="text-xs font-semibold text-slate-700">Gmail yang dibooking (Salin dan wajib sesuai saat stor):</p>
-                                    <div class="bg-slate-50 p-3 rounded-xl border max-h-40 overflow-y-auto space-y-1 font-mono text-xs">
-                                        <template x-for="(item, index) in bookedList" :key="index">
-                                            <div class="flex justify-between items-center bg-white p-1.5 rounded border">
-                                                <span x-text="item"></span>
-                                                <button @click="navigator.clipboard.writeText(item); alert('Disalin: ' + item);" class="text-[10px] bg-blue-100 text-blue-600 px-2 py-0.5 rounded">Salin</button>
-                                            </div>
-                                        </template>
-                                    </div>
-                                </div>
-                            </template>
+                            <button @click="submitStor()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Stor Gmail</button>
                         </div>
                     </div>
 
-                    <!-- TAB 3: RIWAYAT -->
+                    <!-- RIWAYAT -->
                     <div x-show="currentTab === 'riwayat'" class="space-y-4">
                         <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-100 space-y-3">
-                            <h2 class="text-lg font-bold">Riwayat Stor Gmail</h2>
-                            <template x-if="userHistory.length === 0">
-                                <p class="text-xs text-slate-400 text-center py-6">Belum pernah melakukan stor Gmail.</p>
-                            </template>
+                            <h2 class="text-lg font-bold">Riwayat Stor</h2>
                             <div class="space-y-2">
                                 <template x-for="item in userHistory" :key="item.id">
-                                    <div class="p-3 border rounded-xl space-y-1 bg-slate-50 text-xs">
+                                    <div class="p-3 border rounded-xl bg-slate-50 text-xs">
                                         <div class="flex justify-between font-semibold">
-                                            <span x-text="item.date"></span>
-                                            <span :class="{
-                                                'text-amber-600': item.status === 'pending' || item.status === 'dicek',
-                                                'text-emerald-600': item.status === 'diterima',
-                                                'text-rose-600': item.status === 'ditolak'
-                                            }" class="uppercase font-bold" x-text="item.status"></span>
+                                            <span x-text="item.date"></span><span x-text="item.status" class="uppercase"></span>
                                         </div>
-                                        <p class="text-slate-600 font-mono text-[11px]" x-text="item.gmail"></p>
-                                        <template x-if="item.status === 'ditolak'">
-                                            <p class="text-rose-500 text-[11px] font-semibold mt-1" x-text="'Alasan Ditolak: ' + (item.reason || 'Tidak ada alasan')"></p>
-                                        </template>
+                                        <p class="text-slate-600 font-mono" x-text="item.gmail"></p>
                                     </div>
                                 </template>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- TAB 4: CHECKER -->
-                    <div x-show="currentTab === 'checker'" class="space-y-4">
-                        <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-100 space-y-3">
-                            <h2 class="text-lg font-bold">Checker Gmail</h2>
-                            <p class="text-xs text-slate-500">Fitur pengecekan status dan kesehatan akun Gmail secara instan.</p>
-                            <textarea placeholder="Masukkan email untuk dicek..." rows="4" class="w-full p-3 border rounded-xl text-sm outline-none"></textarea>
-                            <button @click="alert('Fitur checker siap dijalankan!')" class="w-full bg-cyan-600 text-white py-2.5 rounded-xl font-bold text-xs">Cek Gmail</button>
-                        </div>
-                    </div>
-
-                    <!-- TAB 5: SALDO & PENARIKAN -->
+                                </div>
+                        <!-- SALDO -->
                     <div x-show="currentTab === 'saldo'" class="space-y-4">
                         <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-100 space-y-4">
                             <h2 class="text-lg font-bold">Saldo & Penarikan</h2>
                             <div class="p-4 bg-blue-50 border border-blue-100 rounded-xl">
                                 <p class="text-xs text-slate-600">Saldo Saat Ini</p>
                                 <h3 class="text-2xl font-extrabold text-blue-600" x-text="'Rp' + formatRupiah(currentUser.saldo)"></h3>
-                                <p class="text-xs text-slate-500 mt-1" x-text="currentU
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex gap-2">
+                                    <button @click="withdrawForm.method = 'DANA'" class="flex-1 py-2 text-xs font-bold bg-blue-600 text-white rounded-xl">DANA</button>
+                                </div>
+                                <input type="text" x-model="withdrawForm.number" placeholder="Nomor e-wallet" class="w-full mt-1 p-2.5 border rounded-xl text-sm">
+                                <input type="number" x-model.number="withdrawForm.amount" placeholder="Nominal (Min 1000)" class="w-full mt-1 p-2.5 border rounded-xl text-sm">
+                                <button @click="requestWithdraw()" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-bold">Ajukan Penarikan</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- OWNER PANEL -->
+                    <div x-show="currentTab === 'owner'" class="space-y-4">
+                        <div class="bg-indigo-900 text-white p-4 rounded-2xl shadow-lg">
+                            <h2 class="font-extrabold text-lg">👑 Panel Owner</h2>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl shadow-xs border space-y-3">
+                            <h3 class="font-bold text-sm">Cek Stor Masuk</h3>
+                            <template x-for="item in allStorList" :key="item.id">
+                                <div class="p-3 border rounded-xl bg-slate-50 text-xs space-y-2">
+                                    <p class="text-blue-600 font-bold" x-text="item.username"></p>
+                                    <p class="font-mono text-slate-700" x-text="item.gmail"></p>
+                                    <div class="flex gap-1">
+                                        <button @click="approveStor(item.id)" class="bg-emerald-600 text-white px-2 py-1 rounded">Terima</button>
+                                        <button @click="rejectStor(item.id, 'Ditolak')" class="bg-rose-600 text-white px-2 py-1 rounded">Tolak</button>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl shadow-xs border space-y-3">
+                            <h3 class="font-bold text-sm">Cek Penarikan</h3>
+                            <template x-for="w in allWithdraws" :key="w.id">
+                                <div class="p-3 border rounded-xl bg-slate-50 text-xs space-y-2">
+                                    <p class="font-bold" x-text="w.username + ' - Rp' + w.amount"></p>
+                                    <p x-text="w.number"></p>
+                                    <div class="flex gap-1">
+                                        <button @click="processWithdraw(w.id, 'berhasil')" class="bg-emerald-600 text-white px-2 py-1 rounded">Setujui</button>
+                                        <button @click="processWithdraw(w.id, 'ditolak')" class="bg-rose-600 text-white px-2 py-1 rounded">Tolak</button>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- NAV BOTTOM -->
+                <div class="bg-white border-t py-2 px-6 flex justify-around items-center fixed bottom-0 w-full max-w-md z-30 shadow-lg">
+                    <button @click="currentTab = 'beranda'" class="text-slate-400 flex flex-col items-center"><i data-lucide="home" class="w-5 h-5"></i></button>
+                    <button @click="currentTab = 'riwayat'" class="text-slate-400 flex flex-col items-center"><i data-lucide="clock" class="w-5 h-5"></i></button>
+                    <button @click="currentTab = 'stor'" class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg -mt-5 border-4 border-white"><i data-lucide="send" class="w-5 h-5"></i></button>
+                    <button @click="currentTab = 'saldo'" class="text-slate-400 flex flex-col items-center"><i data-lucide="wallet" class="w-5 h-5"></i></button>
+                    <button @click="currentTab = currentUser.role === 'owner' ? 'owner' : 'profil'" class="text-slate-400 flex flex-col items-center"><i data-lucide="user" class="w-5 h-5"></i></button>
+                </div>
+            </div>
+        </template>
+    </div>
+
+    <script>
+        function appData() {
+            return {
+                isLoggedIn: false, authMode: 'login', currentTab: 'beranda',
+                loginForm: { username: '', password: '' },
+                regForm: { username: '', password: '', whatsapp: '' },
+                currentUser: null,
+                settings: { appName: 'Luczz', pricePerGmail: 2500, warningText: 'Pastikan Gmail aktif.', category1: 'zero1122', category2: 'hehe1122' },
+                storCategory: 'zero1122', storInputText: '', withdrawForm: { method: 'DANA', number: '', amount: '' },
+                users: [], allStorList: [], allWithdraws: [],
+                init() {
+                    let savedUsers = localStorage.getItem('luczz_users');
+                    if (!savedUsers) {
+                        this.users = [{ uid: 'owner-1', username: 'ambatukam', password: '123456', whatsapp: '0', role: 'owner', saldo: 0, banned: false }];
+                        localStorage.setItem('luczz_users', JSON.stringify(this.users));
+                    } else { this.users = JSON.parse(savedUsers); }
+                    let savedStor = localStorage.getItem('luczz_stor'); if (savedStor) this.allStorList = JSON.parse(savedStor);
+                    let savedWith = localStorage.getItem('luczz_withdraws'); if (savedWith) this.allWithdraws = JSON.parse(savedWith);
+                    setTimeout(() => { lucide.createIcons(); }, 100);
+                },
+                login() {
+                    let found = this.users.find(u => u.username === this.loginForm.username && u.password === this.loginForm.password);
+                    if (found) { this.currentUser = found; this.isLoggedIn = true; this.currentTab = 'beranda'; setTimeout(() => { lucide.createIcons(); }, 100); } 
+                    else { alert('Username atau password salah!'); }
+                },
+                register() {
+                    this.users.push({ uid: 'uid-'+Math.random(), username: this.regForm.username, password: this.regForm.password, whatsapp: this.regForm.whatsapp, role: 'user', saldo: 0, banned: false });
+                    localStorage.setItem('luczz_users', JSON.stringify(this.users)); alert('Daftar berhasil!'); this.authMode = 'login';
+                },
+                submitStor() {
+                    let lines = this.storInputText.split('\n').filter(l => l.trim() !== '');
+                    let newStors = lines.map(line => ({ id: 'stor-'+Math.random(), uid: this.currentUser.uid, username: this.currentUser.username, gmail: line.trim(), status: 'pending' }));
+                    this.allStorList.push(...newStors); localStorage.setItem('luczz_stor', JSON.stringify(this.allStorList)); this.storInputText = ''; alert('Berhasil stor!');
+                },
+                requestWithdraw() {
+                    if(this.withdrawForm.amount > this.currentUser.saldo) return alert('Saldo kurang!');
+                    this.currentUser.saldo -= this.withdrawForm.amount; this.updateUserInStorage();
+                    this.allWithdraws.push({ id: 'wd-'+Math.random(), uid: this.currentUser.uid, username: this.currentUser.username, method: this.withdrawForm.method, number: this.withdrawForm.number, amount: this.withdrawForm.amount, status: 'pending' });
+                    localStorage.setItem('luczz_withdraws', JSON.stringify(this.allWithdraws)); alert('Penarikan diajukan!');
+                },
+                approveStor(id) {
+                    let item = this.allStorList.find(s => s.id === id);
+                    if(item) { item.status = 'diterima'; let targetUser = this.users.find(u => u.uid === item.uid); if(targetUser) { targetUser.saldo += this.settings.pricePerGmail; localStorage.setItem('luczz_users', JSON.stringify(this.users)); } localStorage.setItem('luczz_stor', JSON.stringify(this.allStorList)); }
+                },
+                rejectStor(id, reason) { let item = this.allStorList.find(s => s.id === id); if(item) { item.status = 'ditolak'; localStorage.setItem('luczz_stor', JSON.stringify(this.allStorList)); } },
+                processWithdraw(id, status) {
+                    let w = this.allWithdraws.find(item => item.id === id);
+                    if(w) { w.status = status; if(status === 'ditolak') { let targetUser = this.users.find(u => u.uid === w.uid); if(targetUser) { targetUser.saldo += w.amount; localStorage.setItem('luczz_users', JSON.stringify(this.users)); } } localStorage.setItem('luczz_withdraws', JSON.stringify(this.allWithdraws)); }
+                },
+                updateUserInStorage() { let idx = this.users.findIndex(u => u.uid === this.currentUser.uid); if(idx !== -1) { this.users[idx] = this.currentUser; localStorage.setItem('luczz_users', JSON.stringify(this.users)); } },
+                formatRupiah(val) { return new Intl.NumberFormat('id-ID').format(val || 0); },
+                get userHistory() { return this.allStorList.filter(s => s.uid === this.currentUser.uid); }
+            }
+        }
+    </script>
+</body>
+                                        </html>
+                        
