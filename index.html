@@ -1,259 +1,104 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luczz Gmail - Platform Stor & Booking Gmail</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Alpine.js -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    </style>
-</head>
-<body class="bg-slate-100 text-slate-800 flex justify-center items-center min-h-screen" 
-      x-data="appData()" x-init="init()">
-
-    <div class="w-full max-w-md bg-white min-h-screen shadow-2xl flex flex-col relative overflow-hidden pb-20">
-
-        <!-- AUTH -->
-        <template x-if="!isLoggedIn">
-            <div class="flex-1 flex flex-col justify-center px-6 py-10 bg-gradient-to-br from-blue-600 to-indigo-800 text-white">
-                <div class="text-center mb-8">
-                    <h1 class="text-3xl font-extrabold tracking-tight mb-2">Luczz Gmail 🚀</h1>
-                    <p class="text-blue-100 text-sm">Platform Stor & Booking Gmail Terpercaya</p>
-                </div>
-                <div class="flex bg-blue-700/50 p-1 rounded-xl mb-6 backdrop-blur">
-                    <button @click="authMode = 'login'" :class="authMode === 'login' ? 'bg-white text-blue-600 font-bold shadow' : 'text-white'" class="flex-1 py-2 text-sm rounded-lg transition">Masuk</button>
-                    <button @click="authMode = 'register'" :class="authMode === 'register' ? 'bg-white text-blue-600 font-bold shadow' : 'text-white'" class="flex-1 py-2 text-sm rounded-lg transition">Daftar</button>
-                </div>
-                <!-- Login -->
-                <div x-show="authMode === 'login'" class="bg-white text-slate-800 p-6 rounded-2xl shadow-xl space-y-4">
-                    <h2 class="text-xl font-bold text-slate-900">Masuk Akun</h2>
-                    <div>
-                        <label class="text-xs font-semibold text-slate-600">Username</label>
-                        <input type="text" x-model="loginForm.username" placeholder="Masukkan username" class="w-full mt-1 px-4 py-2 border rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="text-xs font-semibold text-slate-600">Password</label>
-                        <input type="password" x-model="loginForm.password" placeholder="Masukkan password" class="w-full mt-1 px-4 py-2 border rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                    <button @click="login()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-xl font-bold transition shadow-lg shadow-blue-500/30">Masuk Sekarang</button>
-                </div>
-                <!-- Register -->
-                <div x-show="authMode === 'register'" class="bg-white text-slate-800 p-6 rounded-2xl shadow-xl space-y-4">
-                    <h2 class="text-xl font-bold text-slate-900">Daftar Akun Baru</h2>
-                    <div>
-                        <label class="text-xs font-semibold text-slate-600">Username</label>
-                        <input type="text" x-model="regForm.username" placeholder="Buat username" class="w-full mt-1 px-4 py-2 border rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="text-xs font-semibold text-slate-600">Password</label>
-                        <input type="password" x-model="regForm.password" placeholder="Buat password" class="w-full mt-1 px-4 py-2 border rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="text-xs font-semibold text-slate-600">Nomor WhatsApp</label>
-                        <input type="text" x-model="regForm.whatsapp" placeholder="Contoh: 62878xxxxxx" class="w-full mt-1 px-4 py-2 border rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                    <button @click="register()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-xl font-bold transition shadow-lg shadow-blue-500/30">Daftar Sekarang</button>
-                </div>
-            </div>
-        </template>
-
-        <template x-if="isLoggedIn">
-            <div class="flex-1 flex flex-col bg-slate-50">
-                <div class="bg-white px-4 py-3 border-b flex justify-between items-center sticky top-0 z-30 shadow-xs">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center font-bold">L</div>
-                        <span class="font-extrabold text-blue-600 tracking-wide text-lg" x-text="settings.appName"></span>
-                    </div>
-                    <a href="https://whatsapp.com/channel/0029Vb8sNmqFXUuVvXyWBW2W" target="_blank" class="text-xs bg-blue-50 text-blue-600 font-semibold px-3 py-1.5 rounded-full border border-blue-100 flex items-center gap-1.5 hover:bg-blue-100 transition">
-                        💬 Saluran WA
-                    </a>
-                </div>
-
-                <div class="flex-1 overflow-y-auto p-4 space-y-4">
-                    <!-- BERANDA -->
-                    <div x-show="currentTab === 'beranda'" class="space-y-4">
-                        <div class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-5 rounded-2xl shadow-lg relative overflow-hidden">
-                            <p class="text-xs text-blue-200 font-medium">SALDO ANDA</p>
-                            <h2 class="text-3xl font-extrabold mt-1" x-text="'Rp' + formatRupiah(currentUser.saldo)"></h2>
-                            <p class="text-xs text-blue-100 mt-1" x-text="'Harga / Gmail: Rp' + formatRupiah(settings.pricePerGmail)"></p>
-                            <div class="mt-4 flex gap-2">
-                                <button @click="currentTab = 'saldo'" class="bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-4 py-2 rounded-xl backdrop-blur transition">Tarik Saldo</button>
-                                <button @click="currentTab = 'riwayat'" class="bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-4 py-2 rounded-xl backdrop-blur transition">Riwayat</button>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-5 gap-2 bg-white p-3 rounded-2xl shadow-xs border border-slate-100 text-center">
-                            <button @click="currentTab = 'stor'" class="flex flex-col items-center p-2 rounded-xl hover:bg-blue-50"><div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-1"><i data-lucide="send" class="w-5 h-5"></i></div><span class="text-[11px] font-bold">Stor</span></button>
-                            <button @click="currentTab = 'riwayat'" class="flex flex-col items-center p-2 rounded-xl hover:bg-emerald-50"><div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mb-1"><i data-lucide="clock" class="w-5 h-5"></i></div><span class="text-[11px] font-bold">Riwayat</span></button>
-                            <button @click="currentTab = 'checker'" class="flex flex-col items-center p-2 rounded-xl hover:bg-cyan-50"><div class="w-12 h-12 bg-cyan-100 text-cyan-600 rounded-full flex items-center justify-center mb-1"><i data-lucide="search" class="w-5 h-5"></i></div><span class="text-[11px] font-bold">Checker</span></button>
-                            <button @click="currentTab = 'saldo'" class="flex flex-col items-center p-2 rounded-xl hover:bg-amber-50"><div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mb-1"><i data-lucide="wallet" class="w-5 h-5"></i></div><span class="text-[11px] font-bold">Saldo</span></button>
-                            <button @click="currentTab = 'rules'" class="flex flex-col items-center p-2 rounded-xl hover:bg-purple-50"><div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mb-1"><i data-lucide="file-text" class="w-5 h-5"></i></div><span class="text-[11px] font-bold">Rules</span></button>
-                        </div>
-                    </div>
-
-                    <!-- STOR -->
-                    <div x-show="currentTab === 'stor'" class="space-y-4">
-                        <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-100 space-y-4">
-                            <h2 class="text-lg font-bold">Stor Gmail</h2>
-                            <p class="text-xs text-amber-600 bg-amber-50 p-3 rounded-xl border border-amber-200" x-text="settings.warningText"></p>
-                            <div>
-                                <label class="text-xs font-semibold text-slate-600">Pilih Kategori</label>
-                                <select x-model="storCategory" class="w-full mt-1 p-2.5 border rounded-xl text-sm bg-slate-50">
-                                    <option :value="settings.category1" x-text="settings.category1"></option>
-                                    <option :value="settings.category2" x-text="settings.category2"></option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="text-xs font-semibold text-slate-600">Masukkan Gmail (1 baris = 1 Gmail)</label>
-                                <textarea x-model="storInputText" rows="6" class="w-full mt-1 p-3 border rounded-xl text-sm font-mono"></textarea>
-                            </div>
-                            <button @click="submitStor()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Stor Gmail</button>
-                        </div>
-                    </div>
-
-                    <!-- RIWAYAT -->
-                    <div x-show="currentTab === 'riwayat'" class="space-y-4">
-                        <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-100 space-y-3">
-                            <h2 class="text-lg font-bold">Riwayat Stor</h2>
-                            <div class="space-y-2">
-                                <template x-for="item in userHistory" :key="item.id">
-                                    <div class="p-3 border rounded-xl bg-slate-50 text-xs">
-                                        <div class="flex justify-between font-semibold">
-                                            <span x-text="item.date"></span><span x-text="item.status" class="uppercase"></span>
-                                        </div>
-                                        <p class="text-slate-600 font-mono" x-text="item.gmail"></p>
-                                    </div>
-                                </template>
-                            </div>
-                        </div>
-                                </div>
-                        <!-- SALDO -->
-                    <div x-show="currentTab === 'saldo'" class="space-y-4">
-                        <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-100 space-y-4">
-                            <h2 class="text-lg font-bold">Saldo & Penarikan</h2>
-                            <div class="p-4 bg-blue-50 border border-blue-100 rounded-xl">
-                                <p class="text-xs text-slate-600">Saldo Saat Ini</p>
-                                <h3 class="text-2xl font-extrabold text-blue-600" x-text="'Rp' + formatRupiah(currentUser.saldo)"></h3>
-                            </div>
-                            <div class="space-y-3">
-                                <div class="flex gap-2">
-                                    <button @click="withdrawForm.method = 'DANA'" class="flex-1 py-2 text-xs font-bold bg-blue-600 text-white rounded-xl">DANA</button>
-                                </div>
-                                <input type="text" x-model="withdrawForm.number" placeholder="Nomor e-wallet" class="w-full mt-1 p-2.5 border rounded-xl text-sm">
-                                <input type="number" x-model.number="withdrawForm.amount" placeholder="Nominal (Min 1000)" class="w-full mt-1 p-2.5 border rounded-xl text-sm">
-                                <button @click="requestWithdraw()" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-bold">Ajukan Penarikan</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- OWNER PANEL -->
-                    <div x-show="currentTab === 'owner'" class="space-y-4">
-                        <div class="bg-indigo-900 text-white p-4 rounded-2xl shadow-lg">
-                            <h2 class="font-extrabold text-lg">👑 Panel Owner</h2>
-                        </div>
-                        <div class="bg-white p-4 rounded-2xl shadow-xs border space-y-3">
-                            <h3 class="font-bold text-sm">Cek Stor Masuk</h3>
-                            <template x-for="item in allStorList" :key="item.id">
-                                <div class="p-3 border rounded-xl bg-slate-50 text-xs space-y-2">
-                                    <p class="text-blue-600 font-bold" x-text="item.username"></p>
-                                    <p class="font-mono text-slate-700" x-text="item.gmail"></p>
-                                    <div class="flex gap-1">
-                                        <button @click="approveStor(item.id)" class="bg-emerald-600 text-white px-2 py-1 rounded">Terima</button>
-                                        <button @click="rejectStor(item.id, 'Ditolak')" class="bg-rose-600 text-white px-2 py-1 rounded">Tolak</button>
-                                    </div>
-                                </div>
-                            </template>
-                        </div>
-                        <div class="bg-white p-4 rounded-2xl shadow-xs border space-y-3">
-                            <h3 class="font-bold text-sm">Cek Penarikan</h3>
-                            <template x-for="w in allWithdraws" :key="w.id">
-                                <div class="p-3 border rounded-xl bg-slate-50 text-xs space-y-2">
-                                    <p class="font-bold" x-text="w.username + ' - Rp' + w.amount"></p>
-                                    <p x-text="w.number"></p>
-                                    <div class="flex gap-1">
-                                        <button @click="processWithdraw(w.id, 'berhasil')" class="bg-emerald-600 text-white px-2 py-1 rounded">Setujui</button>
-                                        <button @click="processWithdraw(w.id, 'ditolak')" class="bg-rose-600 text-white px-2 py-1 rounded">Tolak</button>
-                                    </div>
-                                </div>
-                            </template>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- NAV BOTTOM -->
-                <div class="bg-white border-t py-2 px-6 flex justify-around items-center fixed bottom-0 w-full max-w-md z-30 shadow-lg">
-                    <button @click="currentTab = 'beranda'" class="text-slate-400 flex flex-col items-center"><i data-lucide="home" class="w-5 h-5"></i></button>
-                    <button @click="currentTab = 'riwayat'" class="text-slate-400 flex flex-col items-center"><i data-lucide="clock" class="w-5 h-5"></i></button>
-                    <button @click="currentTab = 'stor'" class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg -mt-5 border-4 border-white"><i data-lucide="send" class="w-5 h-5"></i></button>
-                    <button @click="currentTab = 'saldo'" class="text-slate-400 flex flex-col items-center"><i data-lucide="wallet" class="w-5 h-5"></i></button>
-                    <button @click="currentTab = currentUser.role === 'owner' ? 'owner' : 'profil'" class="text-slate-400 flex flex-col items-center"><i data-lucide="user" class="w-5 h-5"></i></button>
-                </div>
-            </div>
-        </template>
-    </div>
-
-    <script>
-        function appData() {
-            return {
-                isLoggedIn: false, authMode: 'login', currentTab: 'beranda',
-                loginForm: { username: '', password: '' },
-                regForm: { username: '', password: '', whatsapp: '' },
-                currentUser: null,
-                settings: { appName: 'Luczz', pricePerGmail: 2500, warningText: 'Pastikan Gmail aktif.', category1: 'zero1122', category2: 'hehe1122' },
-                storCategory: 'zero1122', storInputText: '', withdrawForm: { method: 'DANA', number: '', amount: '' },
-                users: [], allStorList: [], allWithdraws: [],
-                init() {
-                    let savedUsers = localStorage.getItem('luczz_users');
-                    if (!savedUsers) {
-                        this.users = [{ uid: 'owner-1', username: 'ambatukam', password: '123456', whatsapp: '0', role: 'owner', saldo: 0, banned: false }];
-                        localStorage.setItem('luczz_users', JSON.stringify(this.users));
-                    } else { this.users = JSON.parse(savedUsers); }
-                    let savedStor = localStorage.getItem('luczz_stor'); if (savedStor) this.allStorList = JSON.parse(savedStor);
-                    let savedWith = localStorage.getItem('luczz_withdraws'); if (savedWith) this.allWithdraws = JSON.parse(savedWith);
-                    setTimeout(() => { lucide.createIcons(); }, 100);
-                },
-                login() {
-                    let found = this.users.find(u => u.username === this.loginForm.username && u.password === this.loginForm.password);
-                    if (found) { this.currentUser = found; this.isLoggedIn = true; this.currentTab = 'beranda'; setTimeout(() => { lucide.createIcons(); }, 100); } 
-                    else { alert('Username atau password salah!'); }
-                },
-                register() {
-                    this.users.push({ uid: 'uid-'+Math.random(), username: this.regForm.username, password: this.regForm.password, whatsapp: this.regForm.whatsapp, role: 'user', saldo: 0, banned: false });
-                    localStorage.setItem('luczz_users', JSON.stringify(this.users)); alert('Daftar berhasil!'); this.authMode = 'login';
-                },
-                submitStor() {
-                    let lines = this.storInputText.split('\n').filter(l => l.trim() !== '');
-                    let newStors = lines.map(line => ({ id: 'stor-'+Math.random(), uid: this.currentUser.uid, username: this.currentUser.username, gmail: line.trim(), status: 'pending' }));
-                    this.allStorList.push(...newStors); localStorage.setItem('luczz_stor', JSON.stringify(this.allStorList)); this.storInputText = ''; alert('Berhasil stor!');
-                },
-                requestWithdraw() {
-                    if(this.withdrawForm.amount > this.currentUser.saldo) return alert('Saldo kurang!');
-                    this.currentUser.saldo -= this.withdrawForm.amount; this.updateUserInStorage();
-                    this.allWithdraws.push({ id: 'wd-'+Math.random(), uid: this.currentUser.uid, username: this.currentUser.username, method: this.withdrawForm.method, number: this.withdrawForm.number, amount: this.withdrawForm.amount, status: 'pending' });
-                    localStorage.setItem('luczz_withdraws', JSON.stringify(this.allWithdraws)); alert('Penarikan diajukan!');
-                },
-                approveStor(id) {
-                    let item = this.allStorList.find(s => s.id === id);
-                    if(item) { item.status = 'diterima'; let targetUser = this.users.find(u => u.uid === item.uid); if(targetUser) { targetUser.saldo += this.settings.pricePerGmail; localStorage.setItem('luczz_users', JSON.stringify(this.users)); } localStorage.setItem('luczz_stor', JSON.stringify(this.allStorList)); }
-                },
-                rejectStor(id, reason) { let item = this.allStorList.find(s => s.id === id); if(item) { item.status = 'ditolak'; localStorage.setItem('luczz_stor', JSON.stringify(this.allStorList)); } },
-                processWithdraw(id, status) {
-                    let w = this.allWithdraws.find(item => item.id === id);
-                    if(w) { w.status = status; if(status === 'ditolak') { let targetUser = this.users.find(u => u.uid === w.uid); if(targetUser) { targetUser.saldo += w.amount; localStorage.setItem('luczz_users', JSON.stringify(this.users)); } } localStorage.setItem('luczz_withdraws', JSON.stringify(this.allWithdraws)); }
-                },
-                updateUserInStorage() { let idx = this.users.findIndex(u => u.uid === this.currentUser.uid); if(idx !== -1) { this.users[idx] = this.currentUser; localStorage.setItem('luczz_users', JSON.stringify(this.users)); } },
-                formatRupiah(val) { return new Intl.NumberFormat('id-ID').format(val || 0); },
-                get userHistory() { return this.allStorList.filter(s => s.uid === this.currentUser.uid); }
-            }
-        }
-    </script>
-</body>
-                                        </html>
-                        
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10091d"><title>Luczz Gmail</title>
+<style>
+:root{--bg:#0b0712;--panel:#171024;--line:#493064;--pink:#ff43ce;--violet:#9e65ff;--text:#f7efff;--muted:#bdaecc;--green:#64efb2}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#2c1248,var(--bg) 60%);color:var(--text);font:15px system-ui,Arial,sans-serif}
+header{position:sticky;top:0;z-index:2;background:#10091dee;border-bottom:1px solid var(--line);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.brand{font-size:23px;font-weight:900;letter-spacing:-.8px;background:linear-gradient(90deg,#fff,var(--pink),var(--violet));background-clip:text;color:transparent}
+main{max-width:1000px;margin:20px auto;padding:0 12px 40px}.panel{background:#171024f5;border:1px solid var(--line);border-radius:15px;padding:16px;margin:12px 0;box-shadow:0 8px 25px #0002}
+h2,h3{margin:0 0 12px}p{line-height:1.5}.muted,small{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:10px}
+input,textarea,select{display:block;width:100%;padding:12px;margin:6px 0 12px;border-radius:9px;border:1px solid #5a3d75;background:#0d0815;color:#fff;font:inherit}textarea{min-height:125px;resize:vertical}
+button{border:0;border-radius:9px;padding:11px 14px;margin:3px 3px 3px 0;background:linear-gradient(100deg,#9c45ff,#ed43cb);color:white;font-weight:750;font-size:14px;cursor:pointer}button.secondary{background:#30223f;border:1px solid #60477a}button.danger{background:#9e2c50}button:disabled{opacity:.45}
+.tabs{display:flex;gap:7px;flex-wrap:wrap}.hidden{display:none!important}.row{border-top:1px solid var(--line);padding:10px 0;overflow-wrap:anywhere}.pill{border:1px solid var(--line);border-radius:99px;padding:5px 9px;color:#e1ceff;font-size:12px}.good{color:var(--green)}.bad{color:#ff8cae}.notice{padding:10px;border-radius:9px;background:#241533;margin:10px 0;overflow-wrap:anywhere}
+.wa{display:flex;align-items:center;gap:12px;text-decoration:none;color:white;padding:12px;border:1px solid #2d7956;border-radius:12px;background:#0c241b}.wa svg{width:42px;height:42px;flex-shrink:0}.tiny{font-size:12px}.actions{display:flex;gap:6px;flex-wrap:wrap}.total{font-weight:800;color:#f4c4ff}
+@media(max-width:480px){.brand{font-size:20px}header{padding:12px}.panel{padding:13px}main{padding:0 9px 30px}}
+</style></head>
+<body><header><div class="brand">Luczz Gmail</div><div id="head"></div></header><main><div id="app"></div><p class="muted tiny">Gunakan hanya alamat email yang kamu miliki atau berwenang kelola. Jangan masukkan password email, OTP, atau kode pemulihan.</p></main>
+<script>
+/*
+  HTML-ONLY LOCAL VERSION:
+  Data tersimpan di localStorage pada browser/perangkat ini saja.
+  Bukan autentikasi server dan tidak sinkron antar perangkat/user.
+  Jangan gunakan untuk mengelola uang atau data nyata sebelum memasang backend.
+*/
+const KEY="luczz_gmail_html_v1";
+const initial={users:[],inventory:[],bookings:[],submissions:[],withdrawals:[],settings:{
+ booking_enabled:false,booking_title:"Booking Gmail",booking_description:"Booking hanya untuk alamat email yang owner berwenang kelola.",
+ stor_title:"Stor",stor_description:"Masukkan alamat email satu per baris untuk ditinjau owner.",
+ announcement:"Jangan masukkan password, OTP, atau kode pemulihan.",
+ whatsapp_url:"https://whatsapp.com/channel/0029Vb8sNmqFXUuVvXyWBW2W"
+}};
+let db=load(),me=null;
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||structuredClone(initial)}catch{return structuredClone(initial)}}
+function save(){localStorage.setItem(KEY,JSON.stringify(db))}
+const $=s=>document.querySelector(s);
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function id(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
+function money(n){return Number(n||0).toLocaleString("id-ID")}
+function alertMsg(s,good=false){let n=$("#notice");if(n)n.innerHTML=`<div class="notice ${good?"good":"bad"}">${esc(s)}</div>`;else alert(s)}
+function authScreen(tab="login"){
+ me=null;$("#head").innerHTML="";$("#app").innerHTML=`<section class="panel" style="max-width:470px;margin:32px auto"><h2>${tab==="login"?"Login":"Daftar"} Luczz Gmail</h2><div class="tabs"><button class="${tab==="login"?"":"secondary"}" onclick="authScreen('login')">Login</button><button class="${tab==="register"?"":"secondary"}" onclick="authScreen('register')">Daftar</button></div><form id="auth"><label>Username</label><input name="username" required minlength="3" autocomplete="username"><label>Password</label><input name="password" type="password" required minlength="6" autocomplete="${tab==="login"?"current-password":"new-password"}">${tab==="register"?'<label>Nomor WhatsApp</label><input name="wa" required minlength="8" placeholder="08xxxxxxxxxx">':''}<button>${tab==="login"?"Masuk":"Buat akun"}</button></form><div id="notice"></div><p class="muted tiny">Catatan: versi HTML menyimpan data di browser HP ini. Login tidak tersinkron ke perangkat lain.</p></section>`;
+ $("#auth").onsubmit=e=>{e.preventDefault();let f=Object.fromEntries(new FormData(e.target));if(tab==="register"){if(db.users.some(u=>u.username.toLowerCase()===f.username.toLowerCase()))return alertMsg("Username sudah digunakan.");let u={id:id(),username:f.username,password:f.password,wa:f.wa,role:"user",balance:0,banned:false};db.users.push(u);save();me=u;render();return}
+ let u=f.username==="ambatukam"&&f.password==="123456p"?{id:"owner",username:"ambatukam",role:"owner",balance:0,wa:"-"}:db.users.find(u=>u.username===f.username&&u.password===f.password);
+ if(!u)return alertMsg("Username atau password salah.");if(u.banned)return alertMsg("Akun diblokir owner.");me=u;render();
+ };
+}
+function shell(content){$("#head").innerHTML=me?`<span class="pill">${esc(me.username)} · ${esc(me.role)}</span> <button class="secondary" onclick="logout()">Keluar</button>`:"";$("#app").innerHTML=content}
+function logout(){me=null;authScreen()}
+function render(){if(me.role==="owner")ownerView();else userView()}
+function userView(){
+ let myB=db.bookings.filter(x=>x.user===me.id),myS=db.submissions.filter(x=>x.user===me.id),myW=db.withdrawals.filter(x=>x.user===me.id);
+ let available=db.inventory.filter(x=>!x.bookedBy).length,availableStatus=db.settings.booking_enabled&&available>0?"tersedia":"tidak tersedia";
+ shell(`<h2>Dashboard User</h2><div id="notice"></div><div class="grid"><section class="panel"><h3>Saldo</h3><h2>Rp ${money(me.balance)}</h2><small>Saldo bertambah setelah Stor disetujui owner.</small></section><section class="panel"><h3>${esc(db.settings.booking_title)}</h3><p>${esc(db.settings.booking_description)}</p><p>Status booking: <b>${availableStatus}</b></p><form id="bookForm"><label>Jumlah (1–100.000)</label><input name="n" type="number" min="1" max="100000" value="1" required><button ${availableStatus!=="tersedia"?"disabled":""}>Booking</button></form><div id="bookResult"></div></section></div>
+<section class="panel"><h3>${esc(db.settings.stor_title)}</h3><p>${esc(db.settings.stor_description)}</p><form id="storForm"><label>Alamat email, satu per baris</label><textarea name="emails" required placeholder="contoh1@example.com&#10;contoh2@example.com"></textarea><p class="muted">Rp2.500 per alamat yang disetujui.</p><p id="estimate" class="total">Perkiraan: Rp0</p><button>Kirim Stor</button></form></section>
+<div class="grid"><section class="panel"><h3>Penarikan saldo</h3><form id="withdrawForm"><label>Nominal</label><input name="amount" type="number" min="1" required><label>Metode</label><select name="method"><option>DANA</option><option>GoPay</option><option>OVO</option></select><label>Nomor tujuan</label><input name="destination" required><button>Ajukan penarikan</button></form><small>Jika ditolak, saldo akan dikembalikan (di browser ini).</small></section><section class="panel"><h3>Saluran WhatsApp</h3><a class="wa" href="${esc(db.settings.whatsapp_url)}" target="_blank" rel="noopener"><svg viewBox="0 0 32 32" fill="#25D366" aria-label="WhatsApp"><path d="M16 .8A15 15 0 0 0 3.1 23.5L1 31l7.7-2A15 15 0 1 0 16 .8Zm0 27.4a12.3 12.3 0 0 1-6.3-1.7l-.5-.3-4.6 1.2 1.2-4.5-.3-.5A12.3 12.3 0 1 1 16 28.2Zm6.8-9.2c-.4-.2-2.3-1.1-2.7-1.2-.4-.1-.6-.2-.9.2-.3.4-1 1.2-1.2 1.4-.2.3-.5.3-.9.1-.4-.2-1.7-.6-3.2-2-1.2-1.1-2-2.4-2.2-2.8-.2-.4 0-.6.2-.8l.6-.7c.2-.2.3-.4.4-.7.1-.3 0-.5 0-.7-.1-.2-.9-2.1-1.3-2.9-.3-.7-.7-.6-.9-.6h-.8c-.3 0-.7.1-1.1.5-.4.4-1.4 1.4-1.4 3.3s1.4 3.8 1.6 4.1c.2.3 2.8 4.3 6.8 6 .9.4 1.6.6 2.1.7.9.3 1.8.2 2.4.1.7-.1 2.3-.9 2.6-1.9.3-.9.3-1.7.2-1.9-.1-.2-.4-.3-.8-.5Z"/></svg><b>Saluran WhatsApp</b></a></section></div>
+<div class="grid"><section class="panel"><h3>Booking saya</h3>${myB.map(x=>`<div class="row">${esc(x.email)} <button class="secondary" onclick="copyEmail('${esc(x.email)}')">Salin</button><p class="muted tiny">Wajib digunakan untuk Stor terkait. Disimpan pada browser ini.</p></div>`).join("")||"<small>Belum ada booking.</small>"}</section><section class="panel"><h3>Riwayat Stor</h3>${myS.map(x=>`<div class="row">${esc(x.email)} · ${esc(x.status)} · Rp ${money(x.amount)}</div>`).join("")||"<small>Belum ada Stor.</small>"}</section><section class="panel"><h3>Riwayat penarikan</h3>${myW.map(x=>`<div class="row">Rp ${money(x.amount)} · ${esc(x.method)} · ${esc(x.status)}</div>`).join("")||"<small>Belum ada permintaan.</small>"}</section><section class="panel"><h3>Data akun</h3><p>Username: ${esc(me.username)}</p><p>Role: user</p><p>WhatsApp: ${esc(me.wa)}</p></section></div>`);
+ let ta=$("#storForm textarea");ta.oninput=()=>{let a=[...new Set(ta.value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean))];$("#estimate").textContent=`Perkiraan jika disetujui: Rp ${money(a.length*2500)} (${a.length} alamat)`};
+ $("#bookForm").onsubmit=e=>{e.preventDefault();let n=Number(new FormData(e.target).get("n")),stock=db.inventory.filter(x=>!x.bookedBy);if(!Number.isInteger(n)||n<1||n>100000)return alertMsg("Jumlah harus 1–100.000.");if(!db.settings.booking_enabled)return alertMsg("Booking sedang OFF.");if(stock.length<n)return alertMsg("Stok tidak mencukupi. Tersedia "+stock.length+".");let picked=stock.slice(0,n);picked.forEach(x=>{x.bookedBy=me.id;db.bookings.push({id:id(),user:me.id,email:x.email,created:new Date().toISOString()})});save();userView();$("#bookResult")?.replaceChildren();};
+ $("#storForm").onsubmit=e=>{e.preventDefault();let arr=[...new Set(new FormData(e.target).get("emails").split(/\r?\n/).map(s=>s.trim()).filter(Boolean))];if(!arr.length)return;let invalid=arr.find(x=>!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(x));if(invalid)return alertMsg("Format alamat tidak valid: "+invalid);const bookedEmails=new Set(db.bookings.filter(b=>b.user===me.id).map(b=>b.email.toLowerCase()));
+let notBooked=arr.filter(email=>!bookedEmails.has(email.toLowerCase()));
+if(notBooked.length)return alertMsg("Stor hanya boleh memakai alamat yang kamu booking. Belum dibooking: "+notBooked.join(", "));
+let alreadyPending=arr.filter(email=>db.submissions.some(x=>x.user===me.id&&x.email.toLowerCase()===email.toLowerCase()&&x.status==="pending"));
+if(alreadyPending.length)return alertMsg("Alamat ini masih menunggu pemeriksaan: "+alreadyPending.join(", "));
+arr.forEach(email=>db.submissions.push({id:id(),user:me.id,email,status:"pending",amount:0}));save();alertMsg(`Stor terkirim: ${arr.length} alamat. Perkiraan Rp ${money(arr.length*2500)}; menunggu pemeriksaan owner. Booking akan hilang setelah disetujui owner.`,true);userView()};
+ $("#withdrawForm").onsubmit=e=>{e.preventDefault();let f=Object.fromEntries(new FormData(e.target)),amount=Number(f.amount);if(!Number.isSafeInteger(amount)||amount<1)return alertMsg("Nominal tidak valid.");if(amount>me.balance)return alertMsg("Saldo tidak mencukupi.");me.balance-=amount;db.withdrawals.push({id:id(),user:me.id,amount,method:f.method,destination:f.destination,status:"pending"});save();userView();alertMsg("Permintaan penarikan dikirim. Saldo ditahan.",true)};
+}
+function copyEmail(s){if(navigator.clipboard)navigator.clipboard.writeText(s).then(()=>alert("Alamat disalin")).catch(()=>prompt("Salin alamat ini:",s));else prompt("Salin alamat ini:",s)}
+function ownerView(){
+ let pending=db.submissions.filter(x=>x.status==="pending"),pw=db.withdrawals.filter(x=>x.status==="pending");
+ shell(`<h2>Dashboard Owner</h2><div id="notice"></div><div class="grid"><section class="panel"><h3>Pengaturan tampilan</h3><form id="settingsForm"><label>Judul Booking</label><input name="booking_title" value="${esc(db.settings.booking_title)}"><label>Deskripsi Booking</label><textarea name="booking_description">${esc(db.settings.booking_description)}</textarea><label>Booking</label><select name="booking_enabled"><option value="true" ${db.settings.booking_enabled?"selected":""}>ON</option><option value="false" ${!db.settings.booking_enabled?"selected":""}>OFF</option></select><label>Judul Stor</label><input name="stor_title" value="${esc(db.settings.stor_title)}"><label>Deskripsi Stor</label><textarea name="stor_description">${esc(db.settings.stor_description)}</textarea><label>Pengumuman</label><textarea name="announcement">${esc(db.settings.announcement)}</textarea><button>Simpan</button></form></section><section class="panel"><h3>Tambah stok Booking</h3><p class="muted">Satu email per baris. Item hanya bisa dibooking sekali pada browser ini.</p><form id="inventoryForm"><textarea name="emails" required placeholder="email1@example.com&#10;email2@example.com"></textarea><button>Tambah stok</button></form><p>Stok tersedia: ${db.inventory.filter(x=>!x.bookedBy).length}</p><p>User terdaftar: ${db.users.length}</p><button class="secondary" onclick="exportData()">Ekspor cadangan JSON</button><label class="tiny">Impor cadangan JSON</label><input type="file" id="importFile" accept=".json,application/json"></section></div>
+<section class="panel"><h3>Hasil Stor / Pending (${pending.length})</h3>${db.submissions.map(x=>{let u=db.users.find(u=>u.id===x.user);return `<div class="row">${esc(u?.username||"user")} · ${esc(x.email)} · <b>${esc(x.status)}</b> ${x.status==="pending"?`<button onclick="reviewStor('${x.id}',true)">Terima (+Rp2.500)</button><button class="danger" onclick="reviewStor('${x.id}',false)">Tolak</button>`:""} </div>`}).join("")||"<small>Belum ada Stor.</small>"}</section>
+<section class="panel"><h3>Permintaan penarikan (${pw.length})</h3>${db.withdrawals.map(x=>{let u=db.users.find(u=>u.id===x.user);return `<div class="row">${esc(u?.username)} · Rp ${money(x.amount)} · ${esc(x.method)} ${esc(x.destination)} · <b>${esc(x.status)}</b> ${x.status==="pending"?`<button onclick="reviewWithdrawal('${x.id}',true)">Setujui</button><button class="danger" onclick="reviewWithdrawal('${x.id}',false)">Tolak & kembalikan saldo</button>`:""}</div>`}).join("")||"<small>Belum ada permintaan.</small>"}</section>
+<div class="grid"><section class="panel"><h3>Data akun user</h3>${db.users.map(u=>`<div class="row"><b>${esc(u.username)}</b> · role user · WA ${esc(u.wa)} · saldo Rp ${money(u.balance)} · ${u.banned?"DIBLOKIR":"aktif"}<br><button class="danger" onclick="toggleBan('${u.id}')">${u.banned?"Buka blokir":"Blokir user"}</button></div>`).join("")||"<small>Belum ada user.</small>"}</section><section class="panel"><h3>Stok dan booking</h3>${db.inventory.map(x=>`<div class="row">${esc(x.email)} · ${x.bookedBy?"dibooking oleh "+esc(db.users.find(u=>u.id===x.bookedBy)?.username||"user"):"tersedia"}</div>`).join("")||"<small>Stok kosong.</small>"}</section></div>`);
+ $("#settingsForm").onsubmit=e=>{e.preventDefault();let f=Object.fromEntries(new FormData(e.target));Object.assign(db.settings,f,{booking_enabled:f.booking_enabled==="true"});save();ownerView();alertMsg("Pengaturan tersimpan.",true)};
+ $("#inventoryForm").onsubmit=e=>{e.preventDefault();let arr=[...new Set(new FormData(e.target).get("emails").split(/\r?\n/).map(s=>s.trim()).filter(Boolean))];if(arr.some(x=>!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(x)))return alertMsg("Ada alamat yang formatnya tidak valid.");let added=0;arr.forEach(email=>{if(!db.inventory.some(x=>x.email.toLowerCase()===email.toLowerCase())){db.inventory.push({id:id(),email,bookedBy:null});added++}});save();ownerView();alertMsg(added+" alamat baru ditambahkan.",true)};
+ $("#importFile").onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let d=JSON.parse(await f.text());if(!d.users||!d.inventory||!d.settings)throw Error("Format cadangan tidak sesuai.");if(confirm("Mengganti data lokal saat ini dengan cadangan ini?")){db=d;save();ownerView();alertMsg("Cadangan diimpor.",true)}}catch(err){alertMsg("Impor gagal: "+err.message)}};
+}
+function reviewStor(id,approve){
+ let x=db.submissions.find(x=>x.id===id&&x.status==="pending");if(!x)return;
+ let u=db.users.find(u=>u.id===x.user);
+ x.status=approve?"approved":"rejected";x.amount=approve?2500:0;
+ // Booking terkait selalu dihapus setelah Stor diputuskan, baik diterima maupun ditolak.
+ const emailKey=x.email.toLowerCase();
+ const booking=db.bookings.find(b=>b.user===x.user&&b.email.toLowerCase()===emailKey);
+ if(booking){
+   db.bookings=db.bookings.filter(b=>!(b.user===x.user&&b.email.toLowerCase()===emailKey));
+   if(approve){
+     // Jika diterima, alamat email dianggap selesai diproses dan stok dihapus.
+     db.inventory=db.inventory.filter(item=>item.email.toLowerCase()!==emailKey);
+   }else{
+     // Jika ditolak, booking dilepas agar alamat bisa dibooking ulang.
+     db.inventory.forEach(item=>{if(item.email.toLowerCase()===emailKey)item.bookedBy=null});
+   }
+ }
+ if(approve&&u)u.balance+=2500;
+ save();ownerView()
+}
+function reviewWithdrawal(id,approve){let x=db.withdrawals.find(x=>x.id===id&&x.status==="pending");if(!x)return;x.status=approve?"approved":"rejected";if(!approve){let u=db.users.find(u=>u.id===x.user);if(u)u.balance+=x.amount}save();ownerView()}
+function toggleBan(id){let u=db.users.find(u=>u.id===id);if(u){u.banned=!u.banned;save();ownerView()}}
+function exportData(){let b=new Blob([JSON.stringify(db,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="luczz-gmail-backup.json";a.click();URL.revokeObjectURL(a.href)}
+authScreen();
+</script></body></html>
